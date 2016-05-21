@@ -1,4 +1,4 @@
-.active, .active:hover, .active:focus {
+.user-active, .user-active:hover, .user-active:focus {
   color: #fff;
   background-color: #337ab7;
 }

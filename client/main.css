@@ -73,7 +73,7 @@ body{
 .chat-users .user .name {
   font-size: 14px;
   font-weight: bold;
-  line-height: 25px;
+  line-height: 50px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
