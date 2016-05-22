@@ -1,8 +1,8 @@
-.user-active, .user-active:hover, .user-active:focus {
-  color: #fff;
-  background-color: #337ab7;
-}
 .user:hover, .user:focus {
   color: #777;
   background-color: #eee;
+}
+.user-active, .user-active:hover, .user-active:focus {
+  color: #fff;
+  background-color: #337ab7;
 }

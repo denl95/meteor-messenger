@@ -7,10 +7,13 @@ import NotFoundPage from '../../ui/NotFoundPage';
 
 function checkLoggedIn(nextState, replace) {
   const loginPathName = '/login';
+  const isLoginRoute = nextState.location.pathname === loginPathName;
   if (!Meteor.loggingIn() && !Meteor.user()) {
-    replace(loginPathName);
+    if (!isLoginRoute) {
+      replace(loginPathName);
+    }
   } else {
-    if (nextState.location.pathname === loginPathName) {
+    if (isLoginRoute) {
       replace('/')
     }
   }

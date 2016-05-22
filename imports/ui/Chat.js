@@ -1,34 +1,41 @@
 import React, { Component } from 'react';
+import { findDOMNode } from 'react-dom';
 import ChatMessage from './ChatMessage';
+import { Meteor } from 'meteor/meteor';
+import { composeWithTracker } from 'react-komposer';
+import { Messages } from '../api/messages/messages';
 
-export default class Chat extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      messages: [
-        {
-          message: 'Lorem ipsum dolor amet, consectetur adipisicing elit Lorem ipsum dolor amet, consectetur adipisicing elit Lorem ipsum dolor amet, consectetur adiping elit'
-        }
-      ]
-    };
+class Chat extends Component {
+  componentDidMount() {
+    this.scrollTop();
   }
   onMessage(e) {
     const text = this.refs.input.value;
     if (e.key === 'Enter') {
-      this.state.messages.push({ message: text });
-      this.setState(this.state);
+      const { roomId } = this.props;
+
+      Messages.insert({ roomId, message: text });
+
+      this.animateScroll();
       this.refs.input.value = '';
     }
   }
+  scrollTop() {
+    const $chat = $(findDOMNode(this.refs.chat));
+    $chat.scrollTop($chat[0].scrollHeight);
+  }
+  animateScroll() {
+    const $chat = $(findDOMNode(this.refs.chat));
+    $chat.animate({ scrollTop: $chat[0].scrollHeight }, 700);
+  }
   render() {
-    const { messages } = this.state;
+    const { messages } = this.props;
     return (
       <div className="col-sm-9 col-xs-12">
-        <div className="col-inside-lg decor-default chat" style={{'overflowY': 'auto'}}>
+        <div ref="chat" className="col-inside-lg decor-default chat" style={{'overflowY': 'auto'}}>
           <div className="chat-body">
             <h6>Mini Chat</h6>
-            {messages.map((obj, i) => <ChatMessage key={i} message={obj.message}/>)}
+            {messages.map((message, i) => <ChatMessage key={i} message={message}/>)}
           </div>
         </div>
         <div className="answer-add">
@@ -40,3 +47,15 @@ export default class Chat extends Component {
     )
   }
 }
+
+export default ChatContainer = composeWithTracker((props, onData) => {
+  const { activeRoom } = props;
+  const messages = activeRoom.messages();
+
+  const data = {
+    messages,
+    roomId: activeRoom._id
+  };
+  onData(null, data);
+})(Chat);
+
